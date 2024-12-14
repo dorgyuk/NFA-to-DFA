@@ -34,7 +34,9 @@ class nfa:
         return epsilon_closure
     def to_dfa(self):
         # 1. ε-closure를 미리 계산
-        queue = deque(self.epsilon_closure()) # 모든 상태의 ε-closure를 deque로 가져옴 내부의 값은 모두 frozenset dfa의 상태들의 모임
+        epsilon_closure = self.epsilon_closure()
+        queue = deque([epsilon_closure[0]]) # 모든 상태의 ε-closure를 deque로 가져옴 내부의 값은 모두 frozenset dfa의 상태들의 모임
+        
         dfa_start=queue[0]
         dfa_delta = dict()
         state_map = dict()
@@ -43,6 +45,7 @@ class nfa:
         #2. dfa 상태, 전이함수 구하기
         while queue:
             current_state = queue.popleft() # {q0,q1}
+            
             for al in sorted(set(self.alphabet) - {"ε"}) :
                 new_state=set()
                 for state in sorted(current_state):
